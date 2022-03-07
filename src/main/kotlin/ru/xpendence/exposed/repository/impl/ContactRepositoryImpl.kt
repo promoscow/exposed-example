@@ -32,8 +32,7 @@ class ContactRepositoryImpl : ContactRepository {
 
     override fun get(id: UUID): Contact? = transaction {
         ContactEntity.select { ContactEntity.id eq id }
-            .map { it.toContact() }
-            .firstOrNull()
+            .firstOrNull()?.toContact()
     }
 
     override fun getAll(userId: UUID): List<Contact> = transaction {

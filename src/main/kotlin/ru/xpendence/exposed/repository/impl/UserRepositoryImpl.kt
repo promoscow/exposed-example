@@ -1,9 +1,6 @@
 package ru.xpendence.exposed.repository.impl
 
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 import ru.xpendence.exposed.model.User
@@ -27,13 +24,25 @@ class UserRepositoryImpl : UserRepository {
             it[name] = user.name
         }
             .resultedValues?.first()?.toUser()
-            ?: throw NoSuchElementException("Error saving user: ${objectMapperKt.writeValueAsString(user)}")
+            ?: throw NoSuchElementException(
+                "Error saving user: ${objectMapperKt.writeValueAsString(user)}. Statement result is null."
+            )
+    }
+
+    override fun update(user: User): User = transaction {
+        UserEntity.update({ UserEntity.id eq user.id }) {
+            it[name] = user.name
+        }
+        UserEntity.select { UserEntity.id eq user.id }
+            .firstOrNull()?.toUser()
+            ?: throw NoSuchElementException(
+                "Error updating user: ${objectMapperKt.writeValueAsString(user)}. Statement result is null."
+            )
     }
 
     override fun get(id: UUID): User? = transaction {
         UserEntity.select { UserEntity.id eq id }
-            .map { it.toUser() }
-            .firstOrNull()
+            .firstOrNull()?.toUser()
     }
 
     override fun getAll(limit: Int): List<User> = transaction {

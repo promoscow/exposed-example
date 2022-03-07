@@ -12,6 +12,8 @@ interface UserRepository {
 
     fun insert(user: User): User
 
+    fun update(user: User): User
+
     fun get(id: UUID): User?
 
     fun getAll(limit: Int): List<User>
