@@ -16,6 +16,8 @@ interface UserRepository {
 
     fun get(id: UUID): User?
 
+    fun getByJoin(id: UUID): User?
+
     fun getAll(limit: Int): List<User>
 
     fun delete(id: UUID)

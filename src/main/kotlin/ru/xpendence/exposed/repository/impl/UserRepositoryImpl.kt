@@ -5,11 +5,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 import ru.xpendence.exposed.model.User
 import ru.xpendence.exposed.repository.UserRepository
+import ru.xpendence.exposed.repository.entity.ContactEntity
 import ru.xpendence.exposed.repository.entity.UserEntity
 import ru.xpendence.exposed.repository.mapper.toUser
 import ru.xpendence.exposed.util.objectMapperKt
 import java.util.*
-import kotlin.NoSuchElementException
 
 /**
  * Created: 02.03.2022
@@ -43,6 +43,14 @@ class UserRepositoryImpl : UserRepository {
     override fun get(id: UUID): User? = transaction {
         UserEntity.select { UserEntity.id eq id }
             .firstOrNull()?.toUser()
+    }
+
+    override fun getByJoin(id: UUID): User? = transaction {
+        (UserEntity leftJoin ContactEntity)
+            .slice(UserEntity.columns.plus(ContactEntity.columns))
+            .select { UserEntity.id eq id }
+            .groupBy { UserEntity.id }
+            .entries.firstOrNull()?.toUser()
     }
 
     override fun getAll(limit: Int): List<User> = transaction {

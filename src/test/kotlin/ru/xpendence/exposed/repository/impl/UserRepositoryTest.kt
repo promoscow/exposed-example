@@ -1,13 +1,10 @@
 package ru.xpendence.exposed.repository.impl
 
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import ru.xpendence.exposed.AbstractTest
 import ru.xpendence.exposed.EntityGenerator
-import ru.xpendence.exposed.model.User
 import ru.xpendence.exposed.repository.UserRepository
 
 /**
@@ -33,6 +30,22 @@ internal class UserRepositoryTest : AbstractTest() {
     fun get() {
         val user = entityGenerator.insertUser()
         assertNotNull(userRepository.get(user.id!!))
+    }
+
+    @Test
+    fun getByJoin() {
+        val user = entityGenerator.insertUser()
+        entityGenerator.insertContact(user.id!!)
+        entityGenerator.insertContact(user.id!!)
+        entityGenerator.insertContact(user.id!!)
+        val stored = userRepository.getByJoin(user.id!!)
+        assertNotNull(stored)
+        stored
+            ?.also { s ->
+                s.contacts
+                    ?.also { c -> assertEquals(3, c.size) }
+                    ?.forEach { assertEquals(user.id, it.userId) }
+            }
     }
 
     @Test
