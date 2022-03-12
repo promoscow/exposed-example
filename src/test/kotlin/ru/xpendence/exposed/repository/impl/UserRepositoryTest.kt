@@ -49,6 +49,11 @@ internal class UserRepositoryTest : AbstractTest() {
     }
 
     @Test
+    fun getPage() {
+
+    }
+
+    @Test
     fun getAll() {
         repeat(3) { entityGenerator.insertUser() }
         assertEquals(2, userRepository.getAll(2).size)
