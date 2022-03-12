@@ -22,7 +22,13 @@ interface UserRepository {
 
     fun getAll(limit: Int): List<User>
 
-    fun getPage(search: String?, orderBy: String, sort: SortOrder, page: Int, size: Int): Page<User>
+    fun getPage(
+        search: String? = null,
+        orderBy: String? = null,
+        sort: SortOrder? = null,
+        page: Int,
+        size: Int
+    ): Page<User>
 
     fun delete(id: UUID)
 }

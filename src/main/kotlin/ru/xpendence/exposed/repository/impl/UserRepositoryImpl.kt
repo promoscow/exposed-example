@@ -48,7 +48,6 @@ class UserRepositoryImpl : UserRepository {
 
     override fun getByJoin(id: UUID): User? = transaction {
         (UserEntity leftJoin ContactEntity)
-            .slice(UserEntity.columns.plus(ContactEntity.columns))
             .select { UserEntity.id eq id }
             .groupBy { UserEntity.id }
             .entries.firstOrNull()?.toUser()
@@ -62,8 +61,8 @@ class UserRepositoryImpl : UserRepository {
 
     override fun getPage(
         search: String?,
-        orderBy: String,
-        sort: SortOrder,
+        orderBy: String?,
+        sort: SortOrder?,
         page: Int,
         size: Int
     ): Page<User> = transaction {
@@ -74,7 +73,10 @@ class UserRepositoryImpl : UserRepository {
                 .orWhere { UserEntity.name like "%$search%" }
         } ?: UserEntity.slice(UserEntity.id).selectAll()
         val users = query
-            .orderBy(UserEntity.columns.first { it.name == orderBy }, sort)
+            .orderBy(
+                orderBy?.let { o -> UserEntity.columns.first { it.name == o } } ?: UserEntity.name,
+                sort ?: SortOrder.ASC
+            )
             .limit(size, (page * size).toLong())
             .mapNotNull {
                 (UserEntity leftJoin ContactEntity)

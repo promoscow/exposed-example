@@ -27,6 +27,8 @@ fun Map.Entry<Column<EntityID<UUID>>, List<ResultRow>>.toUser(): User = let {
     User(
         id = userResultRow[UserEntity.id].value,
         name = userResultRow[UserEntity.name],
-        contacts = this.value.map { it.toContact() }
+        contacts = this.value
+            .filter { it[ContactEntity.id] != null }
+            .map { it.toContact() }
     )
 }

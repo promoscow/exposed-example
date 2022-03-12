@@ -9,7 +9,7 @@ import java.util.*
  * email: slava_rossii@list.ru
  */
 object ContactEntity : IdTable<UUID>("contacts") {
-    override val id = ContactEntity.uuid("id").entityId()
+    override val id = uuid("id").entityId()
     val type = varchar("type", 128)
     val value = varchar("value", 256).nullable()
     val userId = reference("user_id", UserEntity)

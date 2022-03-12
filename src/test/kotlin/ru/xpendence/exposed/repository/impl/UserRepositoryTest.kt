@@ -1,5 +1,6 @@
 package ru.xpendence.exposed.repository.impl
 
+import org.jetbrains.exposed.sql.SortOrder
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,9 +36,7 @@ internal class UserRepositoryTest : AbstractTest() {
     @Test
     fun getByJoin() {
         val user = entityGenerator.insertUser()
-        entityGenerator.insertContact(user.id!!)
-        entityGenerator.insertContact(user.id!!)
-        entityGenerator.insertContact(user.id!!)
+        repeat(3) { entityGenerator.insertContact(user.id!!) }
         val stored = userRepository.getByJoin(user.id!!)
         assertNotNull(stored)
         stored
@@ -50,7 +49,18 @@ internal class UserRepositoryTest : AbstractTest() {
 
     @Test
     fun getPage() {
+        val user = entityGenerator.insertUser()
+        repeat(10) { entityGenerator.insertUser() }
+        repeat(20) { entityGenerator.insertContact(user.id!!) }
 
+        assertEquals(
+            1,
+            userRepository.getPage(user.id.toString(), "name", SortOrder.DESC, 0, 5).content.size
+        )
+        assertEquals(
+            5,
+            userRepository.getPage(page = 1, size = 5).content.size
+        )
     }
 
     @Test
