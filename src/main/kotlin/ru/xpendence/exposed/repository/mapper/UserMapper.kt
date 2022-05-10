@@ -5,8 +5,8 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
 import ru.xpendence.exposed.model.User
-import ru.xpendence.exposed.repository.entity.ContactEntity
-import ru.xpendence.exposed.repository.entity.UserEntity
+import ru.xpendence.exposed.repository.entity.ContactTable
+import ru.xpendence.exposed.repository.entity.UserTable
 import java.util.*
 
 /**
@@ -15,20 +15,20 @@ import java.util.*
  * email: slava_rossii@list.ru
  */
 fun ResultRow.toUser(): User = User(
-    id = this[UserEntity.id].value,
-    name = this[UserEntity.name],
-    contacts = this.let {
-        ContactEntity.select { ContactEntity.userId eq it[UserEntity.id].value }.map { it.toContact() }
+    id = this[UserTable.id].value,
+    name = this[UserTable.name],
+    contacts = this[UserTable.id].value.let {
+        ContactTable.select { ContactTable.userId eq it }.map { it.toContact() }
     }
 )
 
 fun Map.Entry<Column<EntityID<UUID>>, List<ResultRow>>.toUser(): User = let {
     val userResultRow = this.value.first()
     User(
-        id = userResultRow[UserEntity.id].value,
-        name = userResultRow[UserEntity.name],
+        id = userResultRow[UserTable.id].value,
+        name = userResultRow[UserTable.name],
         contacts = this.value
-            .filter { it[ContactEntity.id] != null }
+            .filter { it[ContactTable.id] != null }
             .map { it.toContact() }
     )
 }

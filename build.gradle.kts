@@ -18,7 +18,6 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc") //необходимо для использования спринговых транзакций
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("org.openapitools:jackson-databind-nullable:0.2.2")
@@ -26,10 +25,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("org.flywaydb:flyway-core:8.5.1")
+    implementation("org.flywaydb:flyway-core:8.5.10")
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("org.jetbrains.exposed:exposed-core:0.37.3")
-    implementation("org.jetbrains.exposed:spring-transaction:0.37.3") //необходимо для использования спринговых транзакций
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.38.2")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
@@ -38,7 +36,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
     flyway {
         url = "jdbc:postgresql://localhost:5432/exposed-example"

@@ -8,9 +8,7 @@ import java.util.*
  * Author: Вячеслав Чернышов
  * email: slava_rossii@list.ru
  */
-object ContactEntity : IdTable<UUID>("contacts") {
+object UserTable : IdTable<UUID>("users") {
     override val id = uuid("id").entityId()
-    val type = varchar("type", 128)
-    val value = varchar("value", 256).nullable()
-    val userId = reference("user_id", UserEntity)
+    val name = varchar("name", 512).nullable()
 }

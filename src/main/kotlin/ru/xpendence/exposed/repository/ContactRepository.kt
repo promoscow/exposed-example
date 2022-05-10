@@ -12,6 +12,8 @@ interface ContactRepository {
 
     fun insert(contact: Contact): Contact
 
+    fun update(contact: Contact)
+
     fun get(id: UUID): Contact?
 
     fun getAll(userId: UUID): List<Contact>

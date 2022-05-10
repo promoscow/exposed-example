@@ -1,6 +1,6 @@
 create table contacts
 (
-    id      uuid default gen_random_uuid() primary key,
+    id      uuid default uuid_generate_v4() primary key,
     type    varchar(128) not null,
     value   varchar(256),
     user_id uuid
