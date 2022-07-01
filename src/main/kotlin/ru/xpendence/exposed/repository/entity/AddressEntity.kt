@@ -10,7 +10,7 @@ import java.util.*
  * Краткое описание класса.
  */
 object AddressTable : IdTable<UUID>("addresses") {
-    override val id = ContactEntity.uuid("id").entityId()
+    override val id = uuid("id").entityId()
     val country = varchar("country", 512)
     val city = varchar("city", 512)
     val house = varchar("house", 64)
