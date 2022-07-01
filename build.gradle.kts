@@ -27,6 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.flywaydb:flyway-core:8.5.10")
     implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.38.1")
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.38.2")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
